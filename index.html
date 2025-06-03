@@ -1,0 +1,801 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Eligibility Form UI</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background-color: #f5f7fa;
+    }
+
+    .container {
+      display: flex;
+      height: 100vh;
+    }
+
+    .sidebar,
+    .rightbar {
+      width: 250px;
+      background-color: #ffffff;
+      padding: 20px;
+      border-right: 1px solid #ddd;
+    }
+
+    .rightbar {
+      border-left: 1px solid #ddd;
+    }
+
+    .main {
+      flex: 1;
+      padding: 20px;
+      overflow-y: auto;
+    }
+
+    .tabs {
+      display: flex;
+      gap: 12px;
+      flex-wrap: nowrap;
+      overflow-x: auto;
+      margin-bottom: 20px;
+      position: sticky;
+      top: 0;
+      background-color: #f5f7fa;
+      z-index: 10;
+      padding: 10px 0;
+      border-bottom: 1px solid #ccc;
+    }
+
+    .tab {
+      white-space: nowrap;
+      padding: 8px 16px;
+      background-color: #ffffff;
+      border: 1px solid #ccc;
+      border-radius: 20px;
+      font-size: 0.95rem;
+      color: #333;
+      cursor: pointer;
+      transition: background-color 0.2s, color 0.2s;
+    }
+
+    .tab:hover {
+      background-color: #007bff;
+      color: white;
+    }
+
+    .card {
+      background: white;
+      padding: 20px;
+      border-radius: 10px;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.05);
+      margin-bottom: 20px;
+      scroll-margin-top: 70px;
+    }
+
+    .tag-pill {
+      display: inline-block;
+      font-size: 0.75rem;
+      padding: 2px 8px;
+      border-radius: 10px;
+      color: white;
+      margin-left: 10px;
+    }
+
+    .tag-ins {
+      background-color: #00d1c1;
+    }
+
+    .tag-pat {
+      background-color: #f39c6b;
+    }
+
+
+
+    .coverage-block {
+      background: #f5f7fa;
+      padding: 10px;
+      border: 1px solid #ddd;
+      margin-bottom: 20px;
+    }
+
+    .coverage-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 10px;
+    }
+
+    .coverage-table th,
+    .coverage-table td {
+      padding: 8px;
+      border: 1px solid #ccc;
+      text-align: left;
+    }
+
+    .full-width {
+      width: 100%;
+    }
+
+    .tag-ins {
+      background-color: #00d1c1;
+      color: white;
+      padding: 2px 8px;
+      border-radius: 10px;
+    }
+
+    .btn-add {
+      margin-bottom: 10px;
+      background-color: #007bff;
+      color: white;
+      padding: 6px 12px;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+
+    .waiting-group {
+      display: flex;
+      gap: 8px;
+    }
+
+    .waiting-group input {
+      width: 60px;
+    }
+
+    .waiting-group select {
+      width: 80px;
+    }
+
+    .coverage-table input[type="text"][placeholder="%"] {
+      width: 60px;
+    }
+
+    .waiting-group {
+      display: flex;
+      flex-wrap: nowrap;
+      gap: 6px;
+      align-items: center;
+    }
+
+    .waiting-group input {
+      flex: 0 0 60px;
+    }
+
+    .waiting-group select {
+      flex: 0 0 100px;
+    }
+
+    .limitation-entry {
+      border: 1px solid #ddd;
+      padding: 15px;
+      border-radius: 8px;
+      background: #fff;
+      margin-bottom: 20px;
+    }
+
+    .limitation-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 10px;
+      font-size: 1rem;
+    }
+
+    .expand-link {
+      font-size: 0.85rem;
+      color: #007bff;
+      text-decoration: none;
+    }
+
+    .limitation-controls {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin: 10px 0;
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+
+    .limit-config {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .limit-config input[type="number"] {
+      width: 60px;
+    }
+
+    .limit-config select {
+      padding: 6px;
+    }
+
+    .history-chip {
+      background: #f0f0f0;
+      padding: 8px 12px;
+      border-radius: 6px;
+      font-size: 0.9rem;
+      display: inline-block;
+      margin-top: 5px;
+    }
+
+    .toggle-label {
+      position: relative;
+      display: inline-block;
+      width: 40px;
+      height: 22px;
+    }
+
+    .toggle-label input {
+      opacity: 0;
+      width: 0;
+      height: 0;
+    }
+
+    .slider {
+      position: absolute;
+      cursor: pointer;
+      background-color: #ccc;
+      border-radius: 34px;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      transition: .4s;
+    }
+
+    .slider:before {
+      position: absolute;
+      content: "";
+      height: 14px;
+      width: 14px;
+      left: 4px;
+      bottom: 4px;
+      background-color: white;
+      transition: .4s;
+      border-radius: 50%;
+    }
+
+    .toggle-label input:checked+.slider {
+      background-color: #007bff;
+    }
+
+    .toggle-label input:checked+.slider:before {
+      transform: translateX(18px);
+    }
+
+
+
+
+    h2,
+    h3 {
+      margin-top: 0;
+    }
+
+    label {
+      display: block;
+      margin-top: 10px;
+      font-weight: bold;
+    }
+
+    input,
+    select,
+    textarea {
+      width: 100%;
+      padding: 8px;
+      margin-top: 5px;
+      border-radius: 5px;
+      border: 1px solid #ccc;
+    }
+
+    .status-tag {
+      display: inline-block;
+      padding: 5px 10px;
+      background-color: #ffcccc;
+      color: #a00;
+      border-radius: 5px;
+      font-size: 0.9rem;
+      margin-top: 10px;
+    }
+
+    .footer {
+      position: sticky;
+      bottom: 0;
+      background: white;
+      padding: 10px 20px;
+      text-align: right;
+      border-top: 1px solid #ddd;
+    }
+
+    .btn {
+      padding: 10px 15px;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+
+    .btn-primary {
+      background-color: #007bff;
+      color: white;
+    }
+
+    .btn-secondary {
+      background-color: #6c757d;
+      color: white;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="container">
+    <!-- Left Sidebar -->
+    <div class="sidebar">
+      <h3>Patient</h3>
+      <p><strong>ID:</strong> 3051783</p>
+      <p><strong>Name:</strong>Mak</p>
+      <p><strong>Gender:</strong>Male</p>
+      <p><strong>DOB:</strong>10/21/1955</p>
+      <hr />
+      <ul>
+        <li>View Insurances</li>
+        <li>Family Members</li>
+        <li>Patient Alerts</li>
+        <li>Documents</li>
+        <li>Appointments</li>
+        <li>Notes</li>
+      </ul>
+    </div>
+
+    <!-- Main Content -->
+    <div class="main">
+      <div class="tabs">
+        <div class="tab" onclick="scrollToSection('planInfo')">Plan Info</div>
+        <div class="tab" onclick="scrollToSection('feeSchedule')">Fee Schedule</div>
+        <div class="tab" onclick="scrollToSection('benefits')">Benefits</div>
+        <div class="tab" onclick="scrollToSection('coverage')">Coverage</div>
+        <div class="tab" onclick="scrollToSection('history')">Patient History</div>
+        <div class="tab" onclick="scrollToSection('limitations')">Limitations</div>
+        <div class="tab" onclick="scrollToSection('notes')">Plan Notes</div>
+      </div>
+
+      <div id="planInfo" class="card">
+        <h2>Plan Info</h2>
+        <div class="status-tag">Eligibility Updated on 04/28/2022</div>
+        <label>Subscriber ID</label>
+        <input id="subscriber-id" type="text" value="70907050" />
+
+
+
+
+        <label>DOB:</label>
+        <input id="dob" type="text" value="10/21/1955" />
+        <label>Effective Date</label>
+        <input type="date" value="2021-01-01" />
+        <label>Termination Date</label>
+        <input type="date" />
+        <label>Patient Insured ID</label>
+        <input type="text" value="233976456704" />
+        <label>Carrier Name</label>
+        <input id="carrier-name" type="text" value="Cigna healthcare" readonly />
+      </div>
+
+      <div id="feeSchedule" class="card">
+        <h2>Fee Schedule</h2>
+        <label>Fee Schedule Location</label>
+        <input type="text" />
+        <label>Provider Specialty</label>
+        <input type="text" />
+      </div>
+
+      <div id="benefits" class="card">
+        <h2>Benefits Assignment Settings - Plan Level <span
+            style="background-color:#00d1c1; color:white; padding:2px 8px; border-radius:10px;">Ins</span></h2>
+        <label>Assign Benefits to Patient:</label>
+        <label><input type="radio" name="assignToPatientPlan" /> Yes</label>
+        <label><input type="radio" name="assignToPatientPlan" checked /> No</label>
+
+        <label>Assign Patient Benefits for:</label>
+        <label><input type="radio" name="benefitType" /> Locations</label>
+        <label><input type="radio" name="benefitType" /> Providers</label>
+
+        <hr style="margin:20px 0;" />
+
+        <h2>Benefits Assignment Settings - Patient Level <span
+            style="background-color:#f39c6b; color:white; padding:2px 8px; border-radius:10px;">Pat</span></h2>
+        <label>Use Plan Settings to Assign Patient Benefits:</label>
+        <label><input type="radio" name="usePlanSettings" checked /> Yes</label>
+        <label><input type="radio" name="usePlanSettings" /> No</label>
+
+        <p><strong>Assign Benefits to Patient:</strong> No</p>
+
+        <label>Assign Patient Benefits for Location(s):</label>
+        <input type="text" />
+
+        <label>Assign Patient Benefits for Provider(s):</label>
+        <input type="text" />
+
+        <hr style="margin:20px 0;" />
+
+        <h2>Patient Ortho Benefits</h2>
+
+        <label>Individual Ortho Max:</label>
+        <select>
+          <option>Not Applicable</option>
+        </select>
+        <label>Amount:</label>
+        <input type="text" value="$0" />
+
+        <label>Individual Ortho Max Remaining:</label>
+        <input type="text" value="$0" />
+
+        <label>Individual Ortho Deductible:</label>
+        <select>
+          <option>Not Applicable</option>
+        </select>
+        <label>Amount:</label>
+        <input type="text" value="$0" />
+
+        <label>Ind. Ortho Deductible Remaining:</label>
+        <input type="text" value="$0" />
+
+        <label>Ortho Age Limit:</label>
+        <select>
+          <option>Not Applicable</option>
+        </select>
+
+        <label>Age Limit (Years):</label>
+        <input type="number" value="0" />
+
+        <label>Treatment in Progress Covered:</label>
+        <select>
+          <option>No</option>
+          <option>Yes</option>
+        </select>
+
+        <label>Percent Paid at Banding:</label>
+        <input type="text" placeholder="%" />
+
+        <label>Payment Cycle:</label>
+        <select>
+          <option>Select an Option</option>
+        </select>
+      </div>
+
+
+      <div id="coverage" class="card">
+        <h2>Coverage Information <span class="tag-ins">Ins</span></h2>
+
+        <!-- Default Table 1 -->
+        <div class="coverage-block">
+          <h3>Default Table 1</h3>
+          <label>Providers:</label>
+          <select class="full-width">
+            <option>Select an Option</option>
+          </select>
+
+          <table class="coverage-table">
+            <thead>
+              <tr>
+                <th>Service Category</th>
+                <th>Maximums Waived</th>
+                <th>Deductible Waived</th>
+                <th>Percent Coverage</th>
+                <th>Waiting Period</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>PREVENTIVE</td>
+                <td><input type="checkbox" /></td>
+                <td><input type="checkbox" /></td>
+                <td><input type="text" placeholder="%" /></td>
+                <td>
+                  <div class="waiting-group">
+                    <input type="number" class="wait-input" value="30" />
+                    <select class="wait-select">
+                      <option>Days</option>
+                      <option>Weeks</option>
+                      <option>Months</option>
+                      <option>Years</option>
+                    </select>
+                  </div>
+                </td>
+              </tr>
+              <tr>
+                <td>DIAGNOSTIC</td>
+                <td><input type="checkbox" /></td>
+                <td><input type="checkbox" /></td>
+                <td><input type="text" placeholder="%" /></td>
+                <td>
+                  <div class="waiting-group">
+                    <input type="number" class="wait-input" value="30" />
+                    <select class="wait-select">
+                      <option>Days</option>
+                      <option>Weeks</option>
+                      <option>Months</option>
+                      <option>Years</option>
+                    </select>
+                  </div>
+                </td>
+              </tr>
+              <tr>
+                <td>RESTORATIVE BASIC</td>
+                <td><input type="checkbox" /></td>
+                <td><input type="checkbox" /></td>
+                <td><input type="text" placeholder="%" /></td>
+                <td>
+                  <div class="waiting-group">
+                    <input type="number" class="wait-input" value="30" />
+                    <select class="wait-select">
+                      <option>Days</option>
+                      <option>Weeks</option>
+                      <option>Months</option>
+                      <option>Years</option>
+                    </select>
+                  </div>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <!-- Breakout Codes -->
+        <h3>Breakout Codes (Additional Coverage Information) <span class="tag-ins">Ins</span></h3>
+        <button onclick="addBreakoutRow()" class="btn-add">➕ Add Row</button>
+
+        <table id="breakout-table" class="coverage-table">
+          <thead>
+            <tr>
+              <th>Service Codes</th>
+              <th>Maximums Waived</th>
+              <th>Deductible Waived</th>
+              <th>Percent Coverage</th>
+              <th>Waiting Period</th>
+              <th></th>
+            </tr>
+          </thead>
+          <tbody id="breakout-body">
+            <!-- Rows will be added dynamically -->
+          </tbody>
+        </table>
+      </div>
+
+
+      <div id="history" class="card">
+        <h2>Patient History <span class="tag-pill tag-pat">Pat</span></h2>
+
+        <label>Date Of Last Exam (D0120, D0140, D0150, D0180)</label>
+        <input type="text" placeholder="Enter Date Of Last Exam For D0120, D0140, D0150, D0180" />
+
+        <label>Date Of Last FMX/Pano (D0210, D0330)</label>
+        <input type="text" placeholder="Enter Date Of Last FMX/Pano For D0210, D0330" />
+
+        <label>Date Of Last BWX (D0270, D0272, D0274)</label>
+        <input type="text" placeholder="Enter Date Of Last BWX For D0270, D0272, D0274" />
+
+        <label>Date Of Last Prophy (D1110, D1120)</label>
+        <input type="text" placeholder="Enter Date Of Last Prophy For D1110, D1120" />
+
+        <label>Date Of Last Fluoride (D1206, D1208)</label>
+        <input type="text" placeholder="Enter Date Of Last Fluoride For D1206, D1208" />
+
+        <label>Date Of Last Sealant (D1351, D1352)</label>
+        <input type="text" placeholder="Enter Date Of Last Sealant For D1351, D1352" />
+
+        <label>Date of Last Perio Maintenance/Gingival Scaling (4910/4346)</label>
+        <input type="text" placeholder="Enter Date of Last Perio Maintenance/Gingival Scaling (4910/4346)" />
+      </div>
+
+
+      <div id="limitations" class="card">
+        <h2>Exclusions and Limitations <span class="tag-ins">Ins</span></h2>
+
+        <div class="limitation-entry">
+          <div class="limitation-header">
+            <strong>D8070 Transitional dentition</strong>
+            <!-- <a href="#" class="expand-link">Expand Section</a> -->
+          </div>
+
+          <div class="limitation-controls">
+            <label class="toggle-label">
+              <input type="checkbox" class="limitation-toggle" checked />
+              <span class="slider"></span>
+            </label>
+
+            <div class="limitation-fields">
+              <div class="limit-config">
+                Limited to
+                <input type="number" value="2" />
+                Every
+                <input type="number" value="1" />
+                <select>
+                  <option>Calendar year</option>
+                  <option>Months</option>
+                </select>
+              </div>
+
+              <label>Alert</label>
+              <textarea placeholder="Optional note or alert..."></textarea>
+            </div>
+          </div>
+
+
+        </div>
+
+        <div class="limitation-entry">
+          <div class="limitation-header">
+            <strong>D8080 Adolescent dentition </strong>
+
+          </div>
+
+          <div class="limitation-controls">
+            <label class="toggle-label">
+              <input type="checkbox" class="limitation-toggle" checked />
+              <span class="slider"></span>
+            </label>
+
+            <div class="limitation-fields">
+              <div class="limit-config">
+                Limited to
+                <input type="number" value="2" />
+                Every
+                <input type="number" value="1" />
+                <select>
+                  <option>Calendar year</option>
+                  <option>Months</option>
+                </select>
+              </div>
+
+              <label>Alert</label>
+              <textarea placeholder="Optional note or alert..."></textarea>
+            </div>
+          </div>
+
+
+
+        </div>
+
+        <div class="limitation-entry">
+          <div class="limitation-header">
+            <strong>D8090 Adult dentition</strong>
+
+          </div>
+
+          <div class="limitation-controls">
+            <label class="toggle-label">
+              <input type="checkbox" class="limitation-toggle" checked />
+              <span class="slider"></span>
+            </label>
+
+            <div class="limitation-fields">
+              <div class="limit-config">
+                Limited to
+                <input type="number" value="2" />
+                Every
+                <input type="number" value="1" />
+                <select>
+                  <option>Calendar year</option>
+                  <option>Months</option>
+                </select>
+              </div>
+
+              <label>Alert</label>
+              <textarea placeholder="Optional note or alert..."></textarea>
+            </div>
+          </div>
+
+
+        </div>
+
+      </div>
+
+
+      <div id="notes" class="card">
+        <h2>Plan Notes</h2>
+        <label>Comments</label>
+        <textarea rows="4"></textarea>
+      </div>
+
+      <div class="footer">
+        <button class="btn btn-secondary">Save as Draft</button>
+        <button class="btn btn-primary">Save</button>
+      </div>
+    </div>
+
+    <!-- Right Sidebar -->
+    <div class="rightbar">
+      <h3>Insurance</h3>
+      <p><strong>patient ID:</strong> 3051783</p>
+      <p><strong>SUB ID:</strong>70907050</p>
+      <p><strong>Carrier:</strong>Cigna healthcare</p>
+      <p><strong>Plan:</strong>RTX-Plus-Retiree Trust Code 30</p>
+      <hr />
+      <h3>Carrier Contact</h3>
+      <p>Address: P.O. BOX 997330<br />Sacramento, CA 95899</p>
+      <p>Phone: (866) 902-4835</p>
+
+      <p>Auth Channel: Electronic</p>
+    </div>
+  </div>
+
+  <script>
+    function scrollToSection(id) {
+      const section = document.getElementById(id);
+      if (section) {
+        section.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }
+    }
+
+    function addBreakoutRow() {
+      const tbody = document.getElementById("breakout-body");
+      const row = document.createElement("tr");
+
+      row.innerHTML = `
+      <td>
+        <select>
+          <option>25OFF - Feb Special</option>
+          <option selected>112211 - TestMedical</option>
+          <option>39EXM - Limited Exam</option>
+          <option>25GFT - $25 Gift</option>
+          <option>10KU - 10% Off KOR</option>
+          <option>2ndop - Free 2nd Opinion</option>
+        </select>
+      </td>
+      <td><input type="checkbox" checked /></td>
+      <td><input type="checkbox" /></td>
+     <td><input type="text" placeholder="%" value="80" style="width: 60px;" /></td>
+<td>
+  <div class="waiting-group">
+    <input type="number" value="30" />
+    <select>
+      <option>Days</option>
+      <option>Weeks</option>
+      <option>Months</option>
+      <option>Years</option>
+    </select>
+  </div>
+</td>
+
+
+      <td>
+        <button onclick="removeRow(this)" style="color:#007bff; background:none; border:none;">🗑️</button>
+      </td>
+    `;
+      tbody.appendChild(row);
+    }
+
+    function removeRow(btn) {
+      const row = btn.closest("tr");
+      row.remove();
+    }
+
+    // Optionally pre-load one row on page load:
+    document.addEventListener("DOMContentLoaded", () => {
+      addBreakoutRow();
+    });
+
+
+    document.addEventListener('DOMContentLoaded', function () {
+      const toggles = document.querySelectorAll('.limitation-toggle');
+
+      toggles.forEach(toggle => {
+        toggle.addEventListener('change', function () {
+          const fieldsContainer = this.closest('.limitation-controls').querySelector('.limitation-fields');
+          const inputs = fieldsContainer.querySelectorAll('input, select, textarea');
+          inputs.forEach(el => {
+            el.disabled = !this.checked;
+          });
+        });
+
+        // Trigger once to apply correct initial state
+        toggle.dispatchEvent(new Event('change'));
+      });
+    });
+
+
+  </script>
+</body>
+
+</html>

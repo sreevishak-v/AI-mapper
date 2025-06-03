@@ -1,0 +1,875 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>CIGNA Healthcare - Member Verification</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #f5f7fa;
+            color: #333;
+            line-height: 1.6;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #1e3a8a 0%, #3b82f6 100%);
+            color: white;
+            padding: 1rem 0;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .header-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 1.8rem;
+            font-weight: 700;
+        }
+
+        .search-info {
+            font-size: 0.9rem;
+            opacity: 0.9;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        .member-header {
+            background: white;
+            border-radius: 12px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+            border-left: 5px solid #22c55e;
+        }
+
+        .member-status {
+            display: inline-block;
+            background: #dcfce7;
+            color: #166534;
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            font-weight: 600;
+            font-size: 0.9rem;
+            margin-bottom: 1rem;
+        }
+
+        .section {
+            background: white;
+            border-radius: 12px;
+            margin-bottom: 2rem;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+            overflow: hidden;
+        }
+
+        .section-header {
+            background: #f8fafc;
+            padding: 1.5rem 2rem;
+            border-bottom: 1px solid #e2e8f0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .section-title {
+            font-size: 1.3rem;
+            font-weight: 600;
+            color: #1e293b;
+        }
+
+        .feedback-btn {
+            background: #3b82f6;
+            color: white;
+            border: none;
+            padding: 0.5rem 1rem;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 0.8rem;
+        }
+
+        .section-content {
+            padding: 2rem;
+        }
+
+        .info-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .info-item {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .info-label {
+            font-weight: 600;
+            color: #64748b;
+            font-size: 0.9rem;
+            margin-bottom: 0.3rem;
+        }
+
+        .info-value {
+            font-size: 1rem;
+            color: #1e293b;
+        }
+
+        .plan-details {
+            background: #f1f5f9;
+            padding: 1.5rem;
+            border-radius: 8px;
+            margin-bottom: 1.5rem;
+        }
+
+        .deductible-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .deductible-card {
+            background: white;
+            padding: 1.5rem;
+            border-radius: 8px;
+            border: 1px solid #e2e8f0;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 8px;
+            background: #e2e8f0;
+            border-radius: 4px;
+            margin: 0.5rem 0;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: #3b82f6;
+            border-radius: 4px;
+            transition: width 0.3s ease;
+        }
+
+        .table-container {
+            overflow-x: auto;
+        }
+
+        .data-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 1rem;
+        }
+
+        .data-table th,
+        .data-table td {
+            padding: 0.75rem;
+            text-align: left;
+            border-bottom: 1px solid #e2e8f0;
+        }
+
+        .data-table th {
+            background: #f8fafc;
+            font-weight: 600;
+            color: #475569;
+            font-size: 0.9rem;
+        }
+
+        .data-table td {
+            font-size: 0.9rem;
+        }
+
+        .status-badge {
+            display: inline-block;
+            padding: 0.25rem 0.75rem;
+            border-radius: 12px;
+            font-size: 0.8rem;
+            font-weight: 500;
+        }
+
+        .status-paid {
+            background: #dcfce7;
+            color: #166534;
+        }
+
+        .status-active {
+            background: #dbeafe;
+            color: #1e40af;
+        }
+
+        .procedure-details {
+            font-size: 0.85rem;
+            color: #64748b;
+        }
+
+        .no-data-message {
+            text-align: center;
+            color: #64748b;
+            font-style: italic;
+            padding: 2rem;
+        }
+
+        .coverage-highlight {
+            background: #dcfce7;
+            padding: 1rem;
+            border-radius: 6px;
+            border-left: 4px solid #22c55e;
+            margin: 1rem 0;
+        }
+
+        .tabs {
+            display: flex;
+            border-bottom: 1px solid #e2e8f0;
+            margin-bottom: 2rem;
+        }
+
+        .tab {
+            padding: 1rem 1.5rem;
+            cursor: pointer;
+            border-bottom: 2px solid transparent;
+            transition: all 0.3s ease;
+        }
+
+        .tab.active {
+            border-bottom-color: #3b82f6;
+            color: #3b82f6;
+            font-weight: 600;
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 1rem;
+            }
+
+            .info-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .deductible-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        #insurance-section {
+            display: none;
+        }
+
+        #verify-section {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background: linear-gradient(135deg, #e0e7ff 0%, #f8fafc 100%);
+        }
+
+        .verify-box {
+            background: white;
+            padding: 2rem;
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            max-width: 400px;
+            width: 90%;
+        }
+
+        .verify-box input[type="text"] {
+            padding: 12px;
+            width: 100%;
+            font-size: 16px;
+            border-radius: 6px;
+            border: 1px solid #ccc;
+            margin-top: 10px;
+        }
+
+        .verify-box button {
+            margin-top: 20px;
+            padding: 12px 24px;
+            background-color: #1e3a8a;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+
+        .verify-box button:hover {
+            background-color: #374fcf;
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- Subscriber Verification -->
+    <!-- Subscriber Verification -->
+    <div id="verify-section">
+        <div class="verify-box">
+            <h2>Enter Subscriber ID</h2>
+            <input type="text" id="subscriber-id" placeholder="Subscriber ID e.g. 987281006" />
+            <input type="text" id="dob" placeholder="Date of Birth (MM/DD/YYYY)" />
+            <button onclick="verifySubscriber()">Continue</button>
+            <p id="error-message" style="color: red; margin-top: 10px;"></p>
+        </div>
+    </div>
+
+
+    <!-- Insurance Section -->
+    <div id="insurance-section">
+
+        <header class="header">
+            <div class="header-content">
+                <div class="logo">Cigna healthcare</div>
+                <div class="search-info">
+                    TIN - 050397674 | Provider: jose manuel<br>
+                    Search run: 03/12/2025, 10:54 am
+                </div>
+            </div>
+        </header>
+
+        <div class="container">
+            <div class="member-header">
+                <div class="member-status">Active</div>
+                <h1>Member Details - Mak</h1>
+                <p><strong>Date of service:</strong> 03/12/2025 | <strong>Provider:</strong> jose manuel |
+                    <strong>Location:</strong> ARROWHEAD DENTAL ASSOCIATES, 4995 SOUTH COUNTY TRAIL, CHARLESTOWN, RI,
+                    02813
+                </p>
+            </div>
+
+            <div class="section">
+                <div class="section-header">
+                    <h2 class="section-title">Member's Information</h2>
+                    <button class="feedback-btn">Feedback</button>
+                </div>
+                <div class="section-content">
+                    <div class="info-grid">
+                        <div class="info-item">
+                            <div class="info-label">Name</div>
+                            <div class="info-value">Mak</div>
+                        </div>
+                        <div class="info-item">
+                            <div class="info-label">Date of Birth</div>
+                            <div class="info-value">10/21/1955</div>
+                        </div>
+                        <div class="info-item">
+                            <div class="info-label">Age</div>
+                            <div class="info-value">69 years, 4 months, 20 days</div>
+                        </div>
+                        <div class="info-item">
+                            <div class="info-label">ID Number</div>
+                            <div class="info-value">70907050</div>
+                        </div>
+                        <div class="info-item">
+                            <div class="info-label">Phone Number</div>
+                            <div class="info-value">508-736-8702</div>
+                        </div>
+                        <div class="info-item">
+                            <div class="info-label">Address</div>
+                            <div class="info-value">1vadaj jen 685585.</div>
+                        </div>
+                        <div class="info-item">
+                            <div class="info-label">Email</div>
+                            <div class="info-value">McvKN8753@AOL.COM</div>
+                        </div>
+                    </div>
+                    <p style="color: #64748b; font-size: 0.9rem; font-style: italic;">
+                        Don't see a dependent you are looking for? Additional members covered under the plan will show
+                        here after a claim has been submitted for them. Dependent coverage age limitation may vary.
+                        Please refer to the benefit summary below for specific age limitations.
+                    </p>
+                </div>
+            </div>
+
+            <div class="section">
+                <div class="section-header">
+                    <h2 class="section-title">Dental Plan Information</h2>
+                    <button class="feedback-btn">Feedback</button>
+                </div>
+                <div class="section-content">
+                    <div class="plan-details">
+                        <h3 style="margin-bottom: 1rem; color: #1e293b;">Main Information</h3>
+                        <div class="info-grid">
+                            <div class="info-item">
+                                <div class="info-label">Member ID</div>
+                                <div class="info-value">70907050</div>
+                            </div>
+                            <div class="info-item">
+                                <div class="info-label">Plan</div>
+                                <div class="info-value">RTX-Plus-Retiree Trust Code 30</div>
+                            </div>
+                            <div class="info-item">
+                                <div class="info-label">Plan Number</div>
+                                <div class="info-value">0006202118</div>
+                            </div>
+                            <div class="info-item">
+                                <div class="info-label">Plan Year</div>
+                                <div class="info-value">01/01/2025 - 12/31/2025</div>
+                            </div>
+                            <div class="info-item">
+                                <div class="info-label">Level of Coverage</div>
+                                <div class="info-value">Employee + Spouse</div>
+                            </div>
+                            <div class="info-item">
+                                <div class="info-label">Network</div>
+                                <div class="info-value">Cigna PPO Plus Premier</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <h3 style="margin-bottom: 1rem; color: #1e293b;">Benefits at a Glance</h3>
+                    <div class="info-grid" style="margin-bottom: 2rem;">
+                        <div class="info-item">
+                            <div class="info-label">Deductible</div>
+                            <div class="info-value">$50.0 Individual / $100.0 Family</div>
+                        </div>
+                        <div class="info-item">
+                            <div class="info-label">Maximum</div>
+                            <div class="info-value">$2750.0 Individual annual</div>
+                        </div>
+                        <div class="info-item">
+                            <div class="info-label">Orthodontia Max</div>
+                            <div class="info-value">$2750.0 Individual lifetime</div>
+                        </div>
+                    </div>
+
+                    <h3 style="margin-bottom: 1rem; color: #1e293b;">Deductibles & Maximums</h3>
+                    <div class="deductible-grid">
+                        <div class="deductible-card">
+                            <h4>Individual Deductible (All Networks)</h4>
+                            <div class="progress-bar">
+                                <div class="progress-fill" style="width: 0%"></div>
+                            </div>
+                            <p>$0.00 out of $50.00</p>
+                            <p style="font-size: 0.8rem; color: #64748b;">$50.00 before Individual deductible is met</p>
+                        </div>
+                        <div class="deductible-card">
+                            <h4>Individual Annual Maximum (All Networks)</h4>
+                            <div class="progress-bar">
+                                <div class="progress-fill" style="width: 0%"></div>
+                            </div>
+                            <p>$0.00 out of $2,750.00</p>
+                            <p style="font-size: 0.8rem; color: #64748b;">$2,750.00 before Individual annual maximum is
+                                met</p>
+                        </div>
+                        <div class="deductible-card">
+                            <h4>Family Deductible (All Networks)</h4>
+                            <div class="progress-bar">
+                                <div class="progress-fill" style="width: 0%"></div>
+                            </div>
+                            <p>$0.00 out of $100.00</p>
+                            <p style="font-size: 0.8rem; color: #64748b;">$100.00 before Family deductible is met</p>
+                        </div>
+                        <div class="deductible-card">
+                            <h4>Orthodontics Individual Lifetime Maximum (All Networks)</h4>
+                            <div class="progress-bar">
+                                <div class="progress-fill" style="width: 0%"></div>
+                            </div>
+                            <p>$0.00 out of $2,750.00</p>
+                            <p style="font-size: 0.8rem; color: #64748b;">$2,750.00 before Orthodontics individual
+                                lifetime maximum is met</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="section">
+                <div class="section-header">
+                    <h2 class="section-title">Benefits Summary</h2>
+                    <button class="feedback-btn">Feedback</button>
+                </div>
+                <div class="section-content">
+                    <h3 style="margin-bottom: 1rem;">Orthodontics Procedures</h3>
+
+                    <!-- Ortho code input -->
+                    <tr>
+                        <td colspan="7">
+                            <div style="display: flex; align-items: center; gap: 10px;">
+                                <label for="ortho-code-select"><strong>Select Ortho Code:</strong></label>
+                                <select id="ortho-code-select" style="padding: 6px;">
+                                    <option value="">-- Select Code --</option>
+                                    <option value="D8070">D8070 - Transitional Dentition</option>
+                                    <option value="D8080">D8080 - Adolescent Dentition</option>
+                                    <option value="D8090">D8090 - Adult Dentition</option>
+                                </select>
+                                <button onclick="showOrthoCode()" style="padding: 6px 12px;">Submit</button>
+                            </div>
+                        </td>
+                    </tr>
+
+
+
+                    <div class="table-container">
+                        <table id="ortho-table" class="data-table">
+                            <thead>
+                                <tr>
+                                    <th>Code</th>
+                                    <th>Description</th>
+                                    <th>Age Range</th>
+                                    <th>Co-insurance</th>
+                                    <th>Deductible</th>
+                                    <th>Waiting Period</th>
+                                    <th>Status</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+
+
+
+                                <tr>
+                                    <!-- <td><strong>D8070</strong></td> -->
+                                <tr id="row-D8070" style="display: none;">
+                                    <td><strong>D8070</strong></td>
+
+                                    <td>Comprehensive orthodontic treatment of the transitional dentition</td>
+                                    <td>All Ages</td>
+                                    <td>IN: 100% / OON: 100%</td>
+                                    <td>Not Applicable</td>
+                                    <td>01-01-2022</td>
+                                    <td><span class="status-badge status-active">Satisfied</span></td>
+                                </tr>
+                                <tr>
+                                    <!-- <td><strong>D8080</strong></td> -->
+                                <tr id="row-D8080" style="display: none;">
+                                    <td><strong>D8080</strong></td>
+
+                                    <td>Comprehensive orthodontic treatment of the adolescent dentition</td>
+                                    <td>All Ages</td>
+                                    <td>IN: 100% / OON: 100%</td>
+                                    <td>Not Applicable</td>
+                                    <td>01-01-2022</td>
+                                    <td><span class="status-badge status-active">Satisfied</span></td>
+                                </tr>
+                                <tr>
+                                    <!-- <td><strong>D8090</strong></td> -->
+                                <tr id="row-D8090" style="display: none;">
+                                    <td><strong>D8090</strong></td>
+
+
+                                    <td>Comprehensive orthodontic treatment of the adult dentition</td>
+                                    <td>All Ages</td>
+                                    <td>IN: 100% / OON: 100%</td>
+                                    <td>Not Applicable</td>
+                                    <td>01-01-2022</td>
+                                    <td><span class="status-badge status-active">Satisfied</span></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="coverage-highlight">
+                        <p><strong>Coverage Details:</strong></p>
+                        <ul style="margin-left: 1rem; margin-top: 0.5rem;">
+                            <li>In-network co-pay amount: $0.00</li>
+                            <li>Out-network co-pay amount: $0.00</li>
+                            <li>Maximum: In and Out of Network (Lifetime Maximum)</li>
+                            <li>Frequency: One of (D8070, D8080, D8090) per Lifetime Per patient</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <div class="section">
+                <div class="section-header">
+                    <h2 class="section-title">Member History</h2>
+                    <button class="feedback-btn">Feedback</button>
+                </div>
+                <div class="section-content">
+                    <div class="tabs">
+                        <div class="tab active" onclick="showTab('estimates')">Treatment Estimates</div>
+                        <div class="tab" onclick="showTab('predets')">Pre-determinations</div>
+                        <div class="tab" onclick="showTab('claims')">Claims History</div>
+                        <div class="tab" onclick="showTab('procedures')">Procedure History</div>
+                    </div>
+
+                    <div id="estimates" class="tab-content active">
+                        <div class="no-data-message">
+                            No treatment plan estimates have been created for this member
+                        </div>
+                    </div>
+
+                    <div id="predets" class="tab-content">
+                        <div class="no-data-message">
+                            No pre-determinations have been created for this member
+                        </div>
+                    </div>
+
+                    <div id="claims" class="tab-content">
+                        <div class="table-container">
+                            <table class="data-table">
+                                <thead>
+                                    <tr>
+                                        <th>Date of Service</th>
+                                        <th>Claim Number</th>
+                                        <th>Location</th>
+                                        <th>Provider</th>
+                                        <th>Billed</th>
+                                        <th>Paid</th>
+                                        <th>Status</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>05/31/2023</td>
+                                        <td>202315133276000</td>
+                                        <td>4995 SOUTH COUNTY…</td>
+                                        <td>jose manuel</td>
+                                        <td>$150.00</td>
+                                        <td>$1.60</td>
+                                        <td><span class="status-badge status-paid">Paid fully</span></td>
+                                    </tr>
+                                    <tr>
+                                        <td>02/20/2024</td>
+                                        <td>202405133823800</td>
+                                        <td>4995 SOUTH COUNTY…</td>
+                                        <td>jose manuel</td>
+                                        <td>$65.00</td>
+                                        <td>$26.00</td>
+                                        <td><span class="status-badge status-paid">Paid fully</span></td>
+                                    </tr>
+                                    <tr>
+                                        <td>04/17/2023</td>
+                                        <td>202310733875400</td>
+                                        <td>4995 SOUTH COUNTY…</td>
+                                        <td>jose manuel</td>
+                                        <td>$195.00</td>
+                                        <td>$111.00</td>
+                                        <td><span class="status-badge status-paid">Paid fully</span></td>
+                                    </tr>
+                                    <tr>
+                                        <td>09/05/2024</td>
+                                        <td>202424931342900</td>
+                                        <td>4995 SOUTH COUNTY…</td>
+                                        <td>jose manuel</td>
+                                        <td>$115.00</td>
+                                        <td>$74.00</td>
+                                        <td><span class="status-badge status-paid">Paid fully</span></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                    <div id="procedures" class="tab-content">
+                        <div class="table-container">
+                            <table class="data-table">
+                                <thead>
+                                    <tr>
+                                        <th>Date of Service</th>
+                                        <th>Procedure Code</th>
+                                        <th>Description</th>
+                                        <th>Tooth/Quad/Arch/Surface</th>
+                                        <th>Place of Service</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>09/03/2024</td>
+                                        <td><strong>D1110</strong></td>
+                                        <td>Prophylaxis - Adult</td>
+                                        <td>-- / -- / --</td>
+                                        <td>Office</td>
+                                    </tr>
+                                    <tr>
+                                        <td>02/16/2024</td>
+                                        <td><strong>D0274</strong></td>
+                                        <td>Bitewings- four radiographic images</td>
+                                        <td>-- / -- / --</td>
+                                        <td>Office</td>
+                                    </tr>
+                                    <tr>
+                                        <td>02/16/2024</td>
+                                        <td><strong>D1110</strong></td>
+                                        <td>Prophylaxis - Adult</td>
+                                        <td>-- / -- / --</td>
+                                        <td>Office</td>
+                                    </tr>
+                                    <tr>
+                                        <td>02/16/2024</td>
+                                        <td><strong>D0120</strong></td>
+                                        <td>Periodic oral evaluation - established patient</td>
+                                        <td>-- / -- / --</td>
+                                        <td>Office</td>
+                                    </tr>
+                                    <tr>
+                                        <td>05/26/2023</td>
+                                        <td><strong>D9110</strong></td>
+                                        <td>Palliative treatment of dental pain – per visit</td>
+                                        <td>-- / -- / 21</td>
+                                        <td>Office</td>
+                                    </tr>
+                                    <tr>
+                                        <td>04/13/2023</td>
+                                        <td><strong>D0274</strong></td>
+                                        <td>Bitewings- four radiographic images</td>
+                                        <td>-- / -- / --</td>
+                                        <td>Office</td>
+                                    </tr>
+                                    <tr>
+                                        <td>10/28/2022</td>
+                                        <td><strong>D2740</strong></td>
+                                        <td>Crown - porcelain/ceramic</td>
+                                        <td>LA / LL / 18</td>
+                                        <td>Office</td>
+                                    </tr>
+                                    <tr>
+                                        <td>07/01/2022</td>
+                                        <td><strong>D2740</strong></td>
+                                        <td>Crown - porcelain/ceramic</td>
+                                        <td>LA / LR / 30</td>
+                                        <td>Office</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                            <p style="text-align: center; margin-top: 1rem; color: #64748b;">
+                                <em>Showing recent procedures. Full history available in system.</em>
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="section">
+                <div class="section-header">
+                    <h2 class="section-title">Coverage History</h2>
+                    <button class="feedback-btn">Feedback</button>
+                </div>
+                <div class="section-content">
+                    <div class="table-container">
+                        <table class="data-table">
+                            <thead>
+                                <tr>
+                                    <th>Member ID</th>
+                                    <th>Plan</th>
+                                    <th>Status</th>
+                                    <th>Coverage Effective Date</th>
+                                    <th>Termination Date</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>70907050</td>
+                                    <td>Cigna PPO Plus Premier</td>
+                                    <td><span class="status-badge status-active">Active</span></td>
+                                    <td>01/01/2022</td>
+                                    <td>-</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div id="notes" class="card">
+            <h2>Plan Notes</h2>
+            <label>Comments</label>
+            <textarea
+                rows="4">This data is only for testing the working of extension without implementing LLM</textarea>
+        </div>
+
+        <script>
+            function showTab(tabName) {
+                // Hide all tab contents
+                const tabContents = document.querySelectorAll('.tab-content');
+                tabContents.forEach(content => content.classList.remove('active'));
+
+                // Remove active class from all tabs
+                const tabs = document.querySelectorAll('.tab');
+                tabs.forEach(tab => tab.classList.remove('active'));
+
+                // Show selected tab content
+                document.getElementById(tabName).classList.add('active');
+
+                // Add active class to clicked tab
+                event.target.classList.add('active');
+            }
+
+            // Add feedback functionality
+            document.querySelectorAll('.feedback-btn').forEach(btn => {
+                btn.addEventListener('click', function () {
+                    alert('Feedback functionality would be implemented here. This would typically open a feedback form or modal.');
+                });
+            });
+
+            // Add hover effects and interactions
+            document.addEventListener('DOMContentLoaded', function () {
+                // Add hover effects to table rows
+                const tableRows = document.querySelectorAll('.data-table tbody tr');
+                tableRows.forEach(row => {
+                    row.addEventListener('mouseenter', function () {
+                        this.style.backgroundColor = '#f8fafc';
+                    });
+                    row.addEventListener('mouseleave', function () {
+                        this.style.backgroundColor = '';
+                    });
+                });
+            });
+        </script>
+
+    </div>
+
+    <script>
+        function verifySubscriber() {
+            const id = document.getElementById("subscriber-id").value.trim();
+            const dob = document.getElementById("dob").value.trim();
+            const validID = "70907050";
+            const validDOB = "10/21/1955";
+
+            if (id === validID && dob === validDOB) {
+                document.getElementById("verify-section").style.display = "none";
+                document.getElementById("insurance-section").style.display = "block";
+                window.scrollTo(0, 0);
+            } else {
+                document.getElementById("error-message").textContent = "Invalid Subscriber ID or DOB. Please try again.";
+            }
+        }
+
+
+
+        function showOrthoCode() {
+            const code = document.getElementById('ortho-code-select').value;
+            const validCodes = ['D8070', 'D8080', 'D8090'];
+
+            if (validCodes.includes(code)) {
+                const row = document.getElementById(`row-${code}`);
+                if (row && row.style.display === 'none') {
+                    row.style.display = 'table-row';
+                }
+            } else {
+                alert("Please select a valid code.");
+            }
+
+            // Reset the dropdown to default
+            document.getElementById('ortho-code-select').value = '';
+        }
+
+
+    </script>
+    <script src="insurance.js"></script>
+
+</body>
+
+</html>

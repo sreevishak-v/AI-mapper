@@ -1,0 +1,17 @@
+fastapi
+uvicorn
+pdfplumber
+sentence-transformers
+torch
+pydantic
+python-multipart
+fitz
+
+
+006202118",
+    "insuranceProvider": "Delta Dental PPO Plus Premier",
+    "dateOfBirth": "10/21/1955",
+    "effectiveDate": "01/01/2025",
+    "terminationDate": "12/31/2025",
+    "lastProphy": "12/02/2015",
+    "lastExam": "12/02/2015"

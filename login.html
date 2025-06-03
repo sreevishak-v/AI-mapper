@@ -1,0 +1,402 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Customer Login - Cigna Healthcare</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            background: linear-gradient(135deg, #f5f5f5 0%, #e8e8e8 100%);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .header {
+            background: white;
+            padding: 20px 40px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            font-size: 28px;
+            font-weight: bold;
+            color: #0066cc;
+        }
+
+        .logo-icon {
+            width: 40px;
+            height: 40px;
+            margin-right: 10px;
+            background: linear-gradient(45deg, #00cc66, #0066cc);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 20px;
+        }
+
+        .language-btn {
+            border: 2px solid #0066cc;
+            background: white;
+            color: #0066cc;
+            padding: 8px 20px;
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 14px;
+            transition: all 0.3s ease;
+        }
+
+        .language-btn:hover {
+            background: #0066cc;
+            color: white;
+        }
+
+        .main-content {
+            flex: 1;
+            display: flex;
+            background-image: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 800"><rect width="1200" height="800" fill="%23f8f9fa"/><rect x="600" y="0" width="600" height="800" fill="url(%23familyBg)"/><defs><pattern id="familyBg" x="0" y="0" width="100" height="100" patternUnits="userSpaceOnUse"><rect width="100" height="100" fill="%23e8f4f8"/><circle cx="20" cy="30" r="2" fill="%23d1e7f0" opacity="0.5"/><circle cx="80" cy="70" r="1.5" fill="%23d1e7f0" opacity="0.3"/></pattern></defs></svg>');
+            background-size: cover;
+            background-position: center;
+        }
+
+        .login-section {
+            width: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 40px;
+        }
+
+        .image-section {
+            width: 50%;
+            background: linear-gradient(135deg, rgba(0, 102, 204, 0.1) 0%, rgba(0, 204, 102, 0.1) 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .family-image {
+            width: 80%;
+            height: 60%;
+            background: linear-gradient(45deg, #ff6b6b, #4ecdc4, #45b7d1, #96ceb4);
+            border-radius: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 18px;
+            text-align: center;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+            position: relative;
+        }
+
+        .family-image::before {
+            content: '👨‍👩‍👧‍👦';
+            font-size: 80px;
+            position: absolute;
+            top: 30%;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+
+        .family-image::after {
+            content: 'Happy family using tablet together';
+            position: absolute;
+            bottom: 20%;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 16px;
+            opacity: 0.9;
+        }
+
+        .login-container {
+            background: white;
+            border-radius: 15px;
+            padding: 40px;
+            width: 100%;
+            max-width: 400px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        }
+
+        .login-title {
+            font-size: 28px;
+            color: #333;
+            margin-bottom: 30px;
+            font-weight: normal;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-label {
+            display: block;
+            margin-bottom: 8px;
+            color: #333;
+            font-size: 16px;
+            font-weight: 500;
+        }
+
+        .form-input {
+            width: 100%;
+            padding: 15px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 16px;
+            transition: border-color 0.3s ease;
+            background: #fafafa;
+        }
+
+        .form-input:focus {
+            outline: none;
+            border-color: #0066cc;
+            background: white;
+        }
+
+        .password-container {
+            position: relative;
+        }
+
+        .show-password {
+            position: absolute;
+            right: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: none;
+            border: none;
+            color: #0066cc;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 500;
+        }
+
+        .show-password:hover {
+            text-decoration: underline;
+        }
+
+        .login-button {
+            width: 100%;
+            background: #0066cc;
+            color: white;
+            border: none;
+            padding: 15px;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 500;
+            cursor: pointer;
+            margin: 25px 0;
+            transition: background-color 0.3s ease;
+        }
+
+        .login-button:hover {
+            background: #0052a3;
+        }
+
+        .forgot-links {
+            display: flex;
+            justify-content: space-around;
+            margin-bottom: 25px;
+        }
+
+        .forgot-link {
+            color: #0066cc;
+            text-decoration: none;
+            font-size: 14px;
+            transition: color 0.3s ease;
+        }
+
+        .forgot-link:hover {
+            color: #0052a3;
+            text-decoration: underline;
+        }
+
+        .register-section {
+            text-align: center;
+            padding-top: 20px;
+            border-top: 1px solid #e0e0e0;
+        }
+
+        .register-text {
+            color: #666;
+            margin-bottom: 15px;
+            font-size: 14px;
+        }
+
+        .register-button {
+            background: #f0f8ff;
+            color: #0066cc;
+            border: 2px solid #0066cc;
+            padding: 12px 30px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+
+        .register-button:hover {
+            background: #0066cc;
+            color: white;
+        }
+
+        .feedback-tab {
+            position: fixed;
+            right: 0;
+            top: 50%;
+            transform: translateY(-50%) rotate(-90deg);
+            background: #0066cc;
+            color: white;
+            padding: 10px 20px;
+            border-radius: 8px 8px 0 0;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 500;
+            z-index: 1000;
+        }
+
+        @media (max-width: 768px) {
+            .main-content {
+                flex-direction: column;
+            }
+
+            .login-section,
+            .image-section {
+                width: 100%;
+            }
+
+            .image-section {
+                height: 200px;
+            }
+
+            .header {
+                padding: 15px 20px;
+            }
+
+            .logo {
+                font-size: 24px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="header">
+        <div class="logo">
+            <div class="logo-icon">C</div>
+            CIGNA Healthcare
+        </div>
+        <button class="language-btn">English</button>
+    </div>
+
+    <div class="main-content">
+        <div class="login-section">
+            <div class="login-container">
+                <h1 class="login-title">Customer Login</h1>
+
+                <form id="loginForm">
+                    <div class="form-group">
+                        <label class="form-label" for="username">Username</label>
+                        <input type="text" id="username" class="form-input" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label" for="password">Password</label>
+                        <div class="password-container">
+                            <input type="password" id="password" class="form-input" required>
+                            <button type="button" class="show-password" onclick="togglePassword()">Show</button>
+                        </div>
+                    </div>
+
+                    <button type="submit" class="login-button">Log In</button>
+                </form>
+
+                <div class="forgot-links">
+                    <a href="#" class="forgot-link"
+                        onclick="showAlert('Forgot Username functionality would be implemented here')">Forgot
+                        Username</a>
+                    <a href="#" class="forgot-link"
+                        onclick="showAlert('Forgot Password functionality would be implemented here')">Forgot
+                        Password</a>
+                </div>
+
+                <div class="register-section">
+                    <p class="register-text">Haven't created an account yet?</p>
+                    <button class="register-button"
+                        onclick="showAlert('Registration functionality would be implemented here')">Register</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="image-section">
+            <div class="family-image"></div>
+        </div>
+    </div>
+
+    <div class="feedback-tab" onclick="showAlert('Feedback functionality would be implemented here')">
+        Feedback
+    </div>
+
+    <script>
+        function togglePassword() {
+            const passwordInput = document.getElementById('password');
+            const toggleButton = document.querySelector('.show-password');
+
+            if (passwordInput.type === 'password') {
+                passwordInput.type = 'text';
+                toggleButton.textContent = 'Hide';
+            } else {
+                passwordInput.type = 'password';
+                toggleButton.textContent = 'Show';
+            }
+        }
+
+        function showAlert(message) {
+            alert(message);
+        }
+
+        document.getElementById('loginForm').addEventListener('submit', function (e) {
+            e.preventDefault();
+
+            const username = document.getElementById('username').value.trim();
+            const password = document.getElementById('password').value.trim();
+
+            // Hardcoded credentials
+            const validUsername = "admin";
+            const validPassword = "1234";
+
+            const button = document.querySelector('.login-button');
+
+            if (username === validUsername && password === validPassword) {
+                button.textContent = 'Logging In...';
+                button.style.opacity = '0.7';
+
+                setTimeout(() => {
+                    window.location.href = 'insurance.html'; // redirect to your next page
+                }, 1500);
+            } else {
+                showAlert("Invalid username or password.");
+            }
+        });
+
+    </script>
+
+</body>
+
+</html>
